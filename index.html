@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+      /* Color de la página y disposición del título con el GIF. */
+      body {
+        background: #e8e1cc;
+      }
+
+      .encabezado {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+        align-items: center;
+        gap: 1rem;
+        max-width: 1100px;
+        margin: auto;
+        padding: 0 1rem;
+      }
+
+      h1 {
+        grid-column: 2;
+        margin: 0.67em 0;
+        font-size: 3rem;
+        text-align: center;
+      }
+
+      .encabezado img {
+        grid-column: 3;
+        justify-self: end;
+        width: min(100%, 300px);
+        max-height: 170px;
+        border-radius: 12px;
+        object-fit: contain;
+      }
+
+      /* En pantallas pequeñas, título y GIF comparten una fila más estrecha. */
+      @media (max-width: 600px) {
+        .encabezado {
+          grid-template-columns: minmax(0, 1fr) minmax(110px, 40vw);
+          gap: 0.5rem;
+        }
+
+        h1 {
+          grid-column: 1;
+          justify-self: center;
+          font-size: clamp(1.5rem, 7vw, 2.4rem);
+        }
+
+        .encabezado img {
+          grid-column: 2;
+          width: 100%;
+        }
+      }
+
+      /* Ancho y lectura de la historia. */
+      #historia {
+        max-width: 720px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+        line-height: 1.7;
+        text-align: justify;
+        transform-origin: left center;
+        transform-style: preserve-3d;
+        perspective: 1200px;
+      }
+
+      #historia p {
+        margin: 0 0 1.25rem;
+        hyphens: auto;
+      }
+
+      /* Centra las decisiones y muestra sus descripciones al pasar o enfocar. */
+      #decision {
+        margin: 2rem auto;
+        text-align: center;
+      }
+
+      .opcion {
+        position: relative;
+        display: inline-block;
+        margin: 0 0.5rem;
+      }
+
+      button {
+        padding: 0.6rem 1rem;
+        cursor: pointer;
+      }
+
+      .menu-opcion {
+        position: absolute;
+        z-index: 1;
+        bottom: calc(100% + 0.5rem);
+        left: 50%;
+        width: 220px;
+        padding: 0.75rem;
+        transform: translateX(-50%);
+        border: 1px solid #999;
+        border-radius: 0.4rem;
+        background: #fff;
+        box-shadow: 0 2px 8px rgb(0 0 0 / 15%);
+        text-align: left;
+        visibility: hidden;
+        opacity: 0;
+        transition: opacity 0.15s ease;
+      }
+
+      .opcion:hover .menu-opcion,
+      .opcion:focus-within .menu-opcion {
+        visibility: visible;
+        opacity: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- El título queda centrado y el GIF a su derecha. -->
+    <header class="encabezado">
+      <h1>Título</h1>
+      <img src="uri_ifs___V_i2kzak_VvXfF63j9M-t50JFk_w-IcCDH7FKYoYEOzbg.gif" alt="GIF decorativo">
+    </header>
+
+    <!-- main.js inserta aquí los párrafos de cada página. -->
+    <main id="historia"></main>
+
+    <!-- main.js crea aquí las opciones de la página actual. -->
+    <section id="decision">
+      <h2>Elige tu camino</h2>
+      <div id="opciones"></div>
+      <button id="volver" type="button" hidden>Volver a la página anterior</button>
+    </section>
+
+    <!-- El motor debe cargarse antes del código de la página. -->
+    <script src="aventura.js"></script>
+    <script src="anime.min.js"></script>
+    <script src="main.js"></script>
+  </body>
+</html>
