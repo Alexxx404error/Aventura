@@ -126,18 +126,43 @@ function mostrarPagina(id) {
     textosGuardados[id] = aventura.expandGrammar(pagina.regla, contextoHistoria);
   }
 
+  let retraso = 0;
   const parrafos = textosGuardados[id]
     .split(/\n\s*\n/)
     .filter(texto => texto.trim())
     .map(texto => {
       const parrafo = document.createElement("p");
-      parrafo.textContent = texto.trim();
+      retraso = animarTexto(parrafo, texto.trim(), retraso);
       return parrafo;
     });
 
   historia.replaceChildren(...parrafos);
   mostrarOpciones(id);
   botonVolver.hidden = ruta.length === 1;
+}
+
+// Revela cada párrafo como texto de juego, carácter a carácter.
+function animarTexto(parrafo, texto, retraso = 0) {
+  const reducirMovimiento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (typeof anime === "undefined" || reducirMovimiento) {
+    parrafo.textContent = texto;
+    return retraso;
+  }
+
+  const progreso = { caracteres: 0 };
+  const duracion = texto.length * 22;
+  anime({
+    targets: progreso,
+    caracteres: texto.length,
+    round: 1,
+    duration: duracion,
+    delay: retraso,
+    easing: "linear",
+    update() {
+      parrafo.textContent = texto.slice(0, progreso.caracteres);
+    }
+  });
+  return retraso + duracion + 250;
 }
 
 // Muestra todas las opciones disponibles o solo la ruta ya elegida al volver.
