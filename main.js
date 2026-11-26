@@ -200,28 +200,47 @@ function mostrarPagina(id) {
   botonVolver.hidden = ruta.length === 1;
 }
 
-// Revela cada párrafo como texto de juego, carácter a carácter.
+// Desciende cada letra hasta su posición, con un breve desfase entre letras.
 function animarTexto(parrafo, texto, retraso = 0) {
   if (typeof anime === "undefined") {
     parrafo.textContent = texto;
     return retraso;
   }
 
-  const caracteres = Array.from(texto);
-  const progreso = { caracteres: 0 };
-  const duracion = caracteres.length * 28;
-  anime({
-    targets: progreso,
-    caracteres: caracteres.length,
-    round: 1,
-    duration: duracion,
-    delay: retraso,
-    easing: "linear",
-    update() {
-      parrafo.textContent = caracteres.slice(0, progreso.caracteres).join("");
+  const fragmento = document.createDocumentFragment();
+  const palabras = texto.split(/(\s+)/);
+  let cantidadLetras = 0;
+
+  palabras.forEach(palabra => {
+    if (/^\s+$/.test(palabra)) {
+      fragmento.append(document.createTextNode(palabra));
+      return;
     }
+
+    const contenedorPalabra = document.createElement("span");
+    contenedorPalabra.className = "palabra-animada";
+    Array.from(palabra).forEach(caracter => {
+      const letra = document.createElement("span");
+      letra.className = "historia-letra";
+      letra.textContent = caracter;
+      contenedorPalabra.append(letra);
+      cantidadLetras++;
+    });
+    fragmento.append(contenedorPalabra);
   });
-  return retraso + duracion + 250;
+  parrafo.append(fragmento);
+
+  const duracion = 700;
+  const intervalo = 12;
+  anime({
+    targets: parrafo.querySelectorAll(".historia-letra"),
+    translateY: ["-1em", "0em"],
+    opacity: [0, 1],
+    duration: duracion,
+    delay: anime.stagger(intervalo, { start: retraso }),
+    easing: "easeOutCubic"
+  });
+  return retraso + intervalo * Math.max(cantidadLetras - 1, 0) + duracion + 120;
 }
 
 // Muestra un interruptor: izquierda elige la opción 1 y derecha la opción 2.
