@@ -231,7 +231,7 @@ function animarTexto(parrafo, texto, retraso = 0) {
   parrafo.append(fragmento);
 
   const duracion = 700;
-  const intervalo = 12;
+  const intervalo = 35;
   anime({
     targets: parrafo.querySelectorAll(".historia-letra"),
     translateY: ["-1em", "0em"],
